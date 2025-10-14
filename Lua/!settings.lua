@@ -1,0 +1,2 @@
+--when true, the clear condition messages are shortened to only include the important details. (Eg. "Amount - Win with exactly 6 fire(s) in the level" would become "Amount - Fire x6 (exact)")
+COMPACT_COND_MSG = false

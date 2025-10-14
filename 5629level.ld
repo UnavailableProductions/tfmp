@@ -1,0 +1,3 @@
+[ExperimentalSettingsOrSomething]
+CameraZoom=
+
