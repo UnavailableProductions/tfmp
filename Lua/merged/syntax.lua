@@ -148,7 +148,7 @@ function setunitmap()
 	
 	for i,unit in ipairs(delthese) do
 		local x,y,dir,unitname = unit.values[XPOS],unit.values[YPOS],unit.values[DIR],unit.strings[UNITNAME]
-		addundo({"remove",unitname,x,y,dir,unit.values[ID],unit.values[ID],unit.strings[U_LEVELFILE],unit.strings[U_LEVELNAME],unit.values[VISUALLEVEL],unit.values[COMPLETED],unit.values[VISUALSTYLE],unit.flags[MAPLEVEL],unit.strings[COLOUR],unit.strings[CLEARCOLOUR],unit.followed,unit.back_init,unit.originalname,unit.strings[UNITSIGNTEXT],false,unit.fixed,unit.karma}) -- EDIT: keep karma after undoing
+		addundo({"remove",unitname,x,y,dir,unit.values[ID],unit.values[ID],unit.strings[U_LEVELFILE],unit.strings[U_LEVELNAME],unit.values[VISUALLEVEL],unit.values[COMPLETED],unit.values[VISUALSTYLE],unit.flags[MAPLEVEL],unit.strings[COLOUR],unit.strings[CLEARCOLOUR],unit.followed,unit.back_init,unit.originalname,unit.strings[UNITSIGNTEXT],false,unit.fixed,unit.karma,unit.patches}) -- EDIT: keep karma after undoing
 		delunit(unit.fixed)
 		MF_remove(unit.fixed)
 	end
@@ -256,11 +256,18 @@ function addunit(id,undoing_,levelstart_)
 	local name_ = unit.strings[NAME]
 	local name__ = unit.strings[UNITNAME]
 	unit.originalname = unit.strings[UNITNAME]
-	
+
+	if (string.sub(name_, 1, 7) == "script_") then
+		name = "script"
+	elseif (string.sub(name_, 1, 7) == "charge_") then
+		name = "charge"
+	end
+
 	if (unitlists[name] == nil) then
 		unitlists[name] = {}
 	end
-	
+
+
 	if (string.sub(name_, 1, 5) == "text_") then
 		unit.flags[META] = true
 	end

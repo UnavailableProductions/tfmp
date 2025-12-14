@@ -10,6 +10,24 @@ condlist['refers'] = function(params, checkedconds, checkedconds_, cdata)
             end
         end
 
+        if (string.sub(unitname, 1, 7) == "charge_") then
+			if (string.sub(unitname, 8) == _params) then
+				return true, checkedconds
+			end
+		end
+
+		if (string.sub(unitname, 1, 7) == "script_") then
+			if (string.sub(unitname, 8) == _params) then
+				return true, checkedconds
+			end
+		end
+
+        if (string.sub(unitname, 1, 7) == "tags_") then
+			if (string.sub(unitname, 8) == _params) then
+				return true, checkedconds
+			end
+		end
+
         if hasfeature(unitname, "is", "word", cdata.unitid) and (unitname == _params) then
             return true, checkedconds
         end

@@ -439,7 +439,7 @@ function doconvert(data,extrarule_)
 		end
 		
 		if delthis and (unit.flags[DEAD] == false) then
-			addundo({"remove",unit.strings[UNITNAME],unit.values[XPOS],unit.values[YPOS],unit.values[DIR],unit.values[ID],unit.values[ID],unit.strings[U_LEVELFILE],unit.strings[U_LEVELNAME],unit.values[VISUALLEVEL],unit.values[COMPLETED],unit.values[VISUALSTYLE],unit.flags[MAPLEVEL],unit.strings[COLOUR],unit.strings[CLEARCOLOUR],unit.followed,unit.back_init,unit.originalname,unit.strings[UNITSIGNTEXT],true,unit.fixed,unit.karma}) -- EDIT: keep karma when undoing
+			addundo({"remove",unit.strings[UNITNAME],unit.values[XPOS],unit.values[YPOS],unit.values[DIR],unit.values[ID],unit.values[ID],unit.strings[U_LEVELFILE],unit.strings[U_LEVELNAME],unit.values[VISUALLEVEL],unit.values[COMPLETED],unit.values[VISUALSTYLE],unit.flags[MAPLEVEL],unit.strings[COLOUR],unit.strings[CLEARCOLOUR],unit.followed,unit.back_init,unit.originalname,unit.strings[UNITSIGNTEXT],true,unit.fixed,unit.karma,unit.patches}) -- EDIT: keep karma when undoing
 			
 			if (unit.strings[UNITTYPE] == "text") then
 				updatecode = 1
@@ -584,6 +584,12 @@ function convert(stuff,mats,dolevels_)
 							if (op == "write") or (op == "draw") then
 								mat2 = "text_" .. matdata[1]
 							end
+							if (op == "wires") then
+								mat2 = "charge_" .. matdata[1]
+							end
+							if (op == "tag") then
+								mat2 = "tags_" .. matdata[1]
+							end
 							
 							if (op == "inscribe") then
 								mat2 = "glyph_" .. matdata[1]
@@ -592,7 +598,7 @@ function convert(stuff,mats,dolevels_)
 							if (reverting == false) then
 								local objectfound = false
 								
-								if (unitreference[mat2] ~= nil) and (mat2 ~= "level") then
+								if (unitreference[mat2] ~= nil) and (mat2 ~= "level") and (mat2 ~= "charge") then
 									local object = unitreference[mat2]
 									
 									if (tileslist[object]["name"] == mat2) and ((changes[object] == nil) or (changes[object]["name"] == nil)) then
@@ -628,7 +634,7 @@ function convert(stuff,mats,dolevels_)
 										reverting = true
 									end
 									
-									if (mat2 ~= "revert") or ((mat2 == "revert") and reverting) then
+									if ((mat2 ~= "charge") and (mat2 ~= "revert")) or ((mat2 == "revert") and reverting) then
 										table.insert(mats2, {mat2,ingameid,id})
 										unit.flags[CONVERTED] = true
 									end
@@ -681,6 +687,12 @@ function convert(stuff,mats,dolevels_)
 							if (op == "write") or (op == "draw") then
 								mat2 = "text_" .. matdata[1]
 							end
+							if (op == "wires") then
+								mat2 = "charge_" .. matdata[1]
+							end
+							if (op == "tag") then
+								mat2 = "tags_" .. matdata[1]
+							end
 							
 							if (op == "inscribe") then
 								mat2 = "glyph_" .. matdata[1]
@@ -688,7 +700,7 @@ function convert(stuff,mats,dolevels_)
 							
 							local objectfound = false
 							
-							if (unitreference[mat2] ~= nil) and (mat2 ~= "level") then
+							if (unitreference[mat2] ~= nil) and (mat2 ~= "level") and (mat2 ~= "charge") then
 								local object = unitreference[mat2]
 								
 								if (tileslist[object]["name"] == mat2) and ((changes[object] == nil) or (changes[object]["name"] == nil)) then
@@ -734,15 +746,19 @@ function conversion(dolevels_)
 		
 		local operator = words[2]
 		
-		if (operator == "is") or (operator == "write") or (operator == "become") or (operator == "inscribe") or (operator == "draw") then
+		if (operator == "is") or (operator == "write") or (operator == "become") or (operator == "inscribe") or (operator == "draw") or (operator == "wires") or (operator == "tag") then
 			local output = {}
 			local name = words[1]
 			local thing = words[3]
 
-			if (not dolevels) and (operator == "is" or operator == "become") and name ~= "text" and (string.sub(name,1,4)) ~= "meta" and ((thing ~= "not " .. name) and (thing ~= "all") and (thing ~= "text") and (thing ~= "revert") and (thing ~= "meta") and (thing ~= "unmeta")) and unitreference[thing] == nil and string.sub(thing,1,5) == "text_" and ((unitlists[name] ~= nil and #unitlists[name] > 0) or name == "empty" or name == "level") then
+			if (not dolevels) and (operator == "is" or operator == "become") and name ~= "text" and name ~= "charge" and name ~= "script" and (string.sub(name,1,4)) ~= "meta" and ((thing ~= "not " .. name) and (thing ~= "all") and (thing ~= "text") and (thing ~= "revert") and (thing ~= "meta") and (thing ~= "unmeta")) and unitreference[thing] == nil and string.sub(thing,1,5) == "text_" and ((unitlists[name] ~= nil and #unitlists[name] > 0) or name == "empty" or name == "level") then
 				tryautogenerate(thing)
-			elseif (not dolevels) and (operator == "write" or (operator == "draw")) and name ~= "text" and (string.sub(name,1,4)) ~= "meta" and (thing ~= "not " .. name) and unitreference["text_" .. thing] == nil and string.sub(thing,1,5) == "text_" and ((unitlists[name] ~= nil and #unitlists[name] > 0) or name == "empty" or name == "level") then
+			elseif (not dolevels) and (operator == "write" or (operator == "draw")) and name ~= "text" and name ~= "script" and name ~= "charge" and (string.sub(name,1,4)) ~= "meta" and (thing ~= "not " .. name) and unitreference["text_" .. thing] == nil and string.sub(thing,1,5) == "text_" and ((unitlists[name] ~= nil and #unitlists[name] > 0) or name == "empty" or name == "level") then
 				tryautogenerate("text_" .. thing)
+			elseif (not dolevels) and operator == "code" and name ~= "text" and name ~= "script" and name ~= "charge" and (string.sub(name,1,4)) ~= "meta" and (thing ~= "not " .. name) and unitreference["script_" .. thing] == nil and ((unitlists[name] ~= nil and #unitlists[name] > 0) or name == "empty" or name == "level") then
+				tryautogenerate("script_" .. thing)
+			elseif (not dolevels) and operator == "wires" and name ~= "text" and name ~= "script" and name ~= "charge" and (string.sub(name,1,4)) ~= "meta" and (thing ~= "not " .. name) and unitreference["charge_" .. thing] == nil and ((unitlists[name] ~= nil and #unitlists[name] > 0) or name == "empty" or name == "level") then
+				tryautogenerate("charge_" .. thing)
 			end
 
 			if (name ~= "text") --@Merge: omg beeeeg if block
@@ -774,7 +790,7 @@ function conversion(dolevels_)
 						if (verb == "is") or (verb == "become") then
 							-- EDIT: add check for ECHO
 							if (target == name) and (object ~= "word") and (object ~= "echo") and ((object ~= name) or (verb == "become")) then
-								if (object ~= "text") and (object ~= "revert") and (object ~= "glyph") and (object ~= "meta") and (object ~= "unmeta") and (string.sub(object,1,4) ~= "meta") then
+								if (object ~= "text") and (object ~= "script") and (object ~= "revert") and (object ~= "glyph") and (object ~= "meta") and (object ~= "unmeta") and (string.sub(object,1,4) ~= "meta") then
 									if (object == "not " .. name) then
 										table.insert(output, {"error", conds, "is"})
 
@@ -809,6 +825,14 @@ function conversion(dolevels_)
 							if (string.sub(object, 1, 4) ~= "not ") and (target == name) then
 								table.insert(output, {object, conds, "write"})
 							end
+						elseif (verb == "wires")then
+							if (string.sub(object, 1, 4) ~= "not ") and (target == name) then
+								table.insert(output, {object, conds, verb})
+							end
+						elseif (verb == "code") then
+							if (string.sub(object, 1, 4) ~= "not ") and (target == name) then
+								table.insert(output, {"script_"..object, conds, "is"})
+							end
 						elseif (verb == "inscribe") then
 							if (string.sub(object, 1, 4) ~= "not ") and (target == name) then
 								if toometafunc("glyph_" .. object) then
@@ -831,7 +855,7 @@ function conversion(dolevels_)
 
 						if (op == "is") then
 							-- EDIT: add check for ECHO
-							if (findnoun(object,nlist.brief) == false) and (object ~= "word") and (object ~= "echo") and (object ~= "symbol") and (object ~= "text") and (object ~= "glyph") and (object ~= "meta") and (object ~= "unmeta") then
+							if (findnoun(object,nlist.brief) == false) and (object ~= "word") and (object ~= "charge") and (object ~= "script") and (object ~= "echo") and (object ~= "symbol") and (object ~= "text") and (object ~= "glyph") and (object ~= "meta") and (object ~= "unmeta") then
 								table.insert(conversions, v3)
 							elseif (object == "all") then
 								--[[
@@ -846,6 +870,14 @@ function conversion(dolevels_)
 								end
 								if valid then
 									table.insert(conversions, {"text_" .. name,conds})
+								end
+							elseif (object == "script") then
+								local valid = true -- don't attempt conversion if the object does not exist
+								if unitreference["script_" .. name] == nil and unitreference[name] ~= nil and unitlists[name] ~= nil and #unitlists[name] > 0 then
+									valid = tryautogenerate("script_" .. name,name)
+								end
+								if valid then
+									table.insert(conversions, {"script_" .. name,conds})
 								end
 							elseif (object == "unmeta") and string.sub(name,1,5) == "text_" then
 								local valid = true -- don't attempt conversion if the object does not exist
@@ -878,7 +910,7 @@ function conversion(dolevels_)
 							elseif (object == "glyph") then
 								table.insert(conversions, {"glyph_" .. name,conds})
 							end
-						elseif (op == "write") or (op == "inscribe") or (op == "draw") then
+						elseif (op == "write") or (op == "inscribe") or (op == "draw") or (op == "wires") or (op == "tag") then
 							table.insert(conversions, v3)
 						end
 					end
@@ -890,4 +922,6 @@ function conversion(dolevels_)
 			end
 		end
 	end
+
+	update_patch_rules()
 end

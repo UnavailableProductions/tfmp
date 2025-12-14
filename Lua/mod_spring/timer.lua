@@ -1,7 +1,13 @@
 -- watercoolest
-local timedlvls = {"271level","390level","389level","391level","395level","424level","401level","425level","500level","428level","1155level","467level","1156level","548level","552level","522level","626level","613level","627level","629level","673level","73243level","73234level","1084level","1100level","1169level"} -- add level ids here to let the game know that these levels are timed
+local timedlvls = {"271level","390level","389level","391level","395level","424level","401level","425level","500level","428level","1155level",
+"548level","552level","522level","626level","613level","627level","629level","673level",
+"73243level","73234level","1084level","1100level","1169level","1271level","1305level","1306level","1307level"} -- add level ids here to let the game know that these levels are timed
 local normallvls = {} -- DO NOT ADD ANYTHING TO THIS. non-timed levels will automatically be added here with a value of "true". timed levels will have a value of "false".
 local timermsglvls = {"1169level"}
+local globtickerbase = 1
+local globticker = 1
+local longs = 0
+local shorts = 0
 timedlvls["271level"] = 150 -- put the level id of the new level in the [] like this
 timedlvls["390level"] = 45
 timedlvls["395level"] = 80
@@ -13,14 +19,12 @@ timedlvls["401level"] = -1
 timedlvls["391level"] = -1 -- each time you add a timed level, you need to add a line like this setting its time limit (in seconds)
 timedlvls["425level"] = 230
 timedlvls["500level"] = 86400
-timedlvls["467level"] = 150
 timedlvls["548level"] = 60
-timedlvls["552level"] = 30
+timedlvls["552level"] = 220
 timedlvls["626level"] = 10
 timedlvls["627level"] = 15
 timedlvls["613level"] = -1
 timedlvls["522level"] = -1
-timedlvls["1156level"] = 240
 timedlvls["1155level"] = -1
 timedlvls["629level"] = 50
 timedlvls["673level"] = -1
@@ -29,6 +33,10 @@ timedlvls["73234level"] = -1
 timedlvls["1084level"] = -1
 timedlvls["1100level"] = 35
 timedlvls["1169level"] = 86400
+timedlvls["1271level"] = -1
+timedlvls["1305level"] = 5
+timedlvls["1306level"] = 10
+timedlvls["1307level"] = 5
 timermsglvls["1169level"] = "buble"
 local world = generaldata.strings[WORLD]
 local path = "Data/Worlds/" .. world .. "/"
@@ -71,6 +79,7 @@ end
 
 table.insert(mod_hook_functions["level_start"],
     function()
+		globticker = 1
 		lastlevel = generaldata2.strings[PREVIOUSLEVEL]
 		MF_loadsound("Timer") -- SOUND HERE
 		MF_loadsound("toolong")
@@ -112,6 +121,19 @@ table.insert(mod_hook_functions["level_start"],
 
 table.insert(mod_hook_functions["effect_always"],
     function()
+		longs = findallfeature(nil, "is", "long")
+		shorts = findallfeature(nil, "is", "short")  
+		globticker = globtickerbase
+		for i=1,#longs do
+			 globticker = globticker*0.5
+		end
+		for i=1,#shorts do
+			 globticker = globticker*2
+		end
+		pauser = findallfeature(nil, "is", "pause")  
+		if #pauser > 0 then
+			globticker = 0
+		end
         if tlimit ~= -1 and tlimit ~= nil and not normallvls[level] and generaldata.values[MODE] ~= 5 then
 			if generaldata.strings[CURRLEVEL] ~= "1169level" then
 				if minute <= 9 then
@@ -130,7 +152,7 @@ table.insert(mod_hook_functions["effect_always"],
 			if minute == 0 and second == 0 then
 			timestring = taunt
 			end
-			tframe = tframe + 1
+			tframe = tframe + globticker
 			if tframe > 59 then
 				if second ~= 0 then
 					second = second - 1
@@ -148,6 +170,13 @@ table.insert(mod_hook_functions["effect_always"],
 							else
 								MF_playsound("TimeUp")
 							end
+						end
+						local crumblevels = {"552level", "1332level", "1333level","1334level","1335level","1336level","1337level","1338level","cri1level","cri2level","cri3level","cri4level","1139level","cri5level","cri6level","cri7level","cri8level"}
+						for _, value in ipairs(crumblevels) do
+    						if value == generaldata.strings[CURRLEVEL] then
+        						lastlevel = "391level"
+       							break
+    						end
 						end
 						sublevel(lastlevel,0,0)
 						generaldata.values[TRANSITIONREASON] = 9
@@ -190,3 +219,11 @@ table.insert(mod_hook_functions["level_end"],
 		tlimit = -1
 	end
 )
+condlist["expired"] = function(params,checkedconds,checkedconds_,cdata)
+   	if second == 0 and tlimit ~= -1 and minute == 0 then
+	result = true
+	else
+	result = false
+	end
+	return result,checkedconds
+end

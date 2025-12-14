@@ -126,6 +126,8 @@ baba_font_consts = {
     button_w = 24,
 }
 
+table.insert(objlistdata.alltags, "half text")
+table.insert(objlistdata.alltags, "tag objects")
 table.insert(objlistdata.alltags, "plasma's mods")
 table.insert(objlistdata.alltags, "arrow properties")
 table.insert(objlistdata.alltags, "turning text")

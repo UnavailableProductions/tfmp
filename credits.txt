@@ -6,6 +6,7 @@ Mods used:
 $0,3
 ISIN Port By Noelle
 Timer by Noelle
+Class mod by Mr. Ocean
 Plasma's Modpack By PlasmaFlare
 Based() by Plasmaflare
 Patashu's Modpack by Patashu
@@ -30,7 +31,7 @@ Error Mod By Nonamester
 $0,3
 +
 $0,3
-Adittions made by Springer29 and Ember
+Additions made by Springer29 and Ember
 $0,3
 Sprites Used:
 $0,3
@@ -44,6 +45,7 @@ Shifty by Ember
 Characters Text by Ember
 Wood By DizzyAndy
 Bookshelf by CreatorMage
+Halftext by NovaFlag
 Some Random Sprites By Extrem
 $0,3
 Some Text And Character
@@ -62,6 +64,8 @@ SevenTStorm
 Mothsweeper
 Cadaeibf
 Ember
+Pigeon
+Stick
 $0,3
 Music:
 $0,3
@@ -70,6 +74,8 @@ The Crumbling by Noelle
 DOOR STUCK by Noelle
 Machining By Noelle
 Mpa by Noelle
+Eye of the storm by Paravex
+Digital by ItsOlie
 wakl id syo; by Noelle
 Sticky Situation By Noelle
 Phone A friend By Ember
@@ -82,8 +88,11 @@ Level Not Found By Ember
 Baba Call Saul By Ember
 All Aboard By Ember
 Ask you a question by ember
-beat by Ember
-City Theme By Ember
+workshopping by Ember
+Citadel By Ember
+the climb by Ember
+yar har har by Ember
+Papermaking by Noelle
 Crumbletown By Ember
 bab be u theme by the bab crew
 Devolutionmap by Arvi Teikari

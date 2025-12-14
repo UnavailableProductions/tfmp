@@ -126,7 +126,7 @@ function undo()
 					local baseuid = line[7] or -1
 					
 					if (paradox[uid] == nil) and (paradox[baseuid] == nil) then
-						local x,y,dir,levelfile,levelname,vislevel,complete,visstyle,maplevel,colour,clearcolour,followed,back_init,ogname,signtext,convert,oldid,karma = line[3],line[4],line[5],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],line[16],line[17],line[18],line[19],line[20],line[21],line[22]
+						local x,y,dir,levelfile,levelname,vislevel,complete,visstyle,maplevel,colour,clearcolour,followed,back_init,ogname,signtext,convert,oldid,karma,patches = line[3],line[4],line[5],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],line[16],line[17],line[18],line[19],line[20],line[21],line[22]
 						local name = line[2]
 						
 						local unitname = ""
@@ -530,6 +530,23 @@ function undo()
 					if (unit ~= nil) then --paradox-proofing
 						unit.holder = line[3]
 					end
+				elseif (style == "unpatch") then
+                    local unitid = MF_getfixed(line[2])
+                    local unit = mmf.newObject(unitid)
+                    local patches = line[3]
+                    unit.patches = patches
+                    updatecode = 1
+                elseif (style == "patch") then
+                    local unitid = MF_getfixed(line[2])
+                    local unit = mmf.newObject(unitid)
+                    local prop = line[3]
+                    if (unit.patches ~= nil) then
+                        unit.patches[prop] = unit.patches[prop] - 1
+                        if unit.patches[prop] <= 0 then
+                            unit.patches[prop] = nil
+                        end
+                    end
+                    updatecode = 1
 				elseif (style == "offset") then --Second and final override for Offset starts here.
 					local unit = mmf.newObject(getunitid(line[2]))
 

@@ -820,12 +820,12 @@ function dointro(introdataid)
 			start = 900,
 			wait_until_open = 70,
 			wait_until_reveal = 130,
-			what_to_reveal = "text_rock",
+			what_to_reveal = "text_bolt",
 			
 			position = true,
-			shake = {"rock", 130, 200},
+			shake = {"bolt", 130, 200},
 			wait_until_position = 70,
-			what_to_position = "rock",
+			what_to_position = "bolt",
 			
 			disregard_after = 205,
 			
@@ -834,7 +834,25 @@ function dointro(introdataid)
 			appear_sound = "intro_reveal_3f",
 			disappear_sound = "intro_disappear_3",
 		},
-		
+		power =
+		{
+			start = 1000,
+			wait_until_open = 70,
+			wait_until_reveal = 130,
+			what_to_reveal = "text_power",
+			
+			position = true,
+			shake = {"bolt", 130, 200},
+			wait_until_position = 70,
+			what_to_position = "bolt",
+			
+			disregard_after = 205,
+			
+			particles = true,
+			
+			appear_sound = "intro_reveal_3f",
+			disappear_sound = "intro_disappear_3",
+		},
 		flag =
 		{
 			start = 1220,
@@ -853,6 +871,25 @@ function dointro(introdataid)
 			
 			appear_sound = "intro_reveal_4f",
 			disappear_sound = "intro_disappear_4",
+		},
+		is =
+		{
+			start = 1220,
+			wait_until_open = 70,
+			wait_until_reveal = 130,
+			what_to_reveal = "text_both",
+			
+			position = true,
+			shake = {" ", 130, 200},
+			wait_until_position = 70,
+			what_to_position = " ",
+			
+			disregard_after = 205,
+			
+			particles = true,
+			
+			appear_sound = "intro_reveal_3f",
+			disappear_sound = "intro_disappear_3",
 		},
 	}
 	local introdata = mmf.newObject(introdataid)
@@ -1037,7 +1074,7 @@ function dointro(introdataid)
 			for i,unit in ipairs(units) do
 				local unitname = unit.strings[UNITNAME]
 				
-				if (unitname == "text_is") or (unitname == "text_win") or (unitname == "text_stop") or (unitname == "text_push") or (unitname == "text_near") or (unitname == "text_power") or (unitname == "text_powered") then
+				if (unitname == "text_is") or (unitname == "text_win") or (unitname == "text_stop") or (unitname == "text_push") or (unitname == "text_near") or (unitname == "text_power") or (unitname == "text_powered")then
 					unit.visible = true
 				end
 			end

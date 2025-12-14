@@ -2,6 +2,7 @@ local str = debug.getinfo(1).source:sub(2)
 local dir = str:match("(.*/)")
 
 local load_order = {
+	"ending.lua",
     "blocks.lua",
 	"clears.lua",
 	"conditions.lua",

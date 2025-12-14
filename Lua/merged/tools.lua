@@ -1,271 +1,4 @@
-function writerules(parent,name,x_,y_)
-	--[[ 
-		@mods(this) - Override reason: Custom "this" rule display. Also remove unitid display when 
-			forming "this(X) is float" and "Y mimic X"
-	 ]]
-	local basex = x_
-	local basey = y_
-	local linelimit = 12
-	local maxcolumns = 4
-	
-	local x,y = basex,basey
-	
-	if (#visualfeatures > 0) then
-		writetext(langtext("rules_colon"),0,x,y,name,true,2,true)
-	end
-	
-	local i_ = 1
-	
-	local count = 0
-	local allrules = {}
-	
-	local custom = MF_read("level","general","customruleword")
-	
-	for i,rules in ipairs(visualfeatures) do
-		local text = ""
-		local rule = rules[1]
-
-		if (#custom == 0) then
-			-- EDIT: implement AMBIENT
-			local target = rule[1]
-			local target_ = target
-			local isnot = string.sub(target, 1, 4)
-			if (isnot == "not ") then
-				target_ = string.sub(target, 5)
-			else
-				isnot = ""
-			end
-			if (target_ == "ambient") then -- EDIT: implement AMBIENT
-				text = text .. isnot .. target_ .. " (" .. ws_ambientObject .. ") "
-			else
-				text = text .. target .. " "
-			end
-		else
-			text = text .. custom .. " "
-		end
-		
-		local conds = rules[2]
-		local ids = rules[3]
-		local tags = rules[4]
-		
-		local fullinvis = true
-		for a,b in ipairs(ids) do
-			for c,d in ipairs(b) do
-				local dunit = mmf.newObject(d)
-				
-				if dunit.visible then
-					fullinvis = false
-				end
-			end
-		end
-		
-		if (fullinvis == false) then
-			if (#conds > 0) then
-				local num_this_conds = 0
-				local this_cond = ""
-				for a,cond in ipairs(conds) do
-					local condtype = plasma_utils.real_condtype(cond[1])
-					if condtype == "this" or condtype == "not this" then
-						num_this_conds = num_this_conds + 1
-						local pnoun_unitid = parse_this_unit_from_param_id(cond[2][1])
-						local pnoun_unit = mmf.newObject(pnoun_unitid)
-
-						if condtype == "this" then
-							this_cond = pnoun_unit.strings[NAME]
-						else
-							this_cond = "not "..pnoun_unit.strings[NAME]
-						end
-					end
-				end
-				if num_this_conds > 0 then
-					text = this_cond.." ("..rule[1]..")".." "
-				end 
-
-				for a,cond in ipairs(conds) do
-					local middlecond = true
-					
-					if (cond[2] == nil) or ((cond[2] ~= nil) and (#cond[2] == 0)) then
-						middlecond = false
-					end
-
-					local condtype = plasma_utils.real_condtype(cond[1])
-					if condtype == "this" or condtype == "not this" then
-					elseif middlecond then
-						if (#custom == 0) then
-							local target = cond[1]
-							local isnot = string.sub(target, 1, 4)
-							local target_ = target
-							
-							if (isnot == "not ") then
-								target_ = string.sub(target, 5)
-							else
-								isnot = ""
-							end
-							
-							if (word_names[target_] ~= nil) then
-								target = isnot .. word_names[target_]
-							end
-							
-							text = text .. target .. " "
-						else
-							text = text .. custom .. " "
-						end
-						
-						if (cond[2] ~= nil) then
-							if (#cond[2] > 0) then
-								for c,d in ipairs(cond[2]) do
-									local this_param_name = parse_this_param_and_get_raycast_units(d)
-									if this_param_name then
-										text = text .. this_param_name.." "
-									elseif (#custom == 0) then
-										local target = d
-										local isnot = string.sub(target, 1, 4)
-										local target_ = target
-										
-										if (isnot == "not ") then
-											target_ = string.sub(target, 5)
-										else
-											isnot = ""
-										end
-										
-										if (word_names[target_] ~= nil) then
-											target = isnot .. word_names[target_]
-										elseif (target_ == "ambient") then -- EDIT: implement AMBIENT
-											target = isnot .. target_ .. " (" .. ws_ambientObject .. ")"
-										end
-										
-										text = text .. target .. " "
-									else
-										text = text .. custom .. " "
-									end
-									
-									if (#cond[2] > 1) and (c ~= #cond[2]) then
-										text = text .. "& "
-									end
-								end
-							end
-						end
-						
-						if (a < #conds - num_this_conds) then
-							text = text .. "& "
-						end
-					else
-						if cond[1] ~= "feelspast" and cond[1] ~= "feelsfuture" then
-
-							if (#custom == 0) then
-							-- EDIT: allow prefixes to have different visual names in the properties
-							local target = cond[1]
-							local isnot = string.sub(target, 1, 4)
-							local target_ = target
-
-							if (isnot == "not ") then
-								target_ = string.sub(target, 5)
-							else
-								isnot = ""
-							end
-
-							if (word_names[target_] ~= nil) then
-								target = isnot .. word_names[target_]
-							end
-
-								text = target .. " " .. text
-							else
-								text = custom .. " " .. text
-							end
-						else
-							if cond[1] == "feelspast" then
-								for a, b in ipairs(presenttense) do
-									if b == rule[2] then
-										rule[2] = pasttense[a]
-									end
-								end
-							elseif cond[1] == "feelsfuture" then
-								for a, b in ipairs(presenttense) do
-									if b == rule[2] then
-										rule[2] = futuretense[a]
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-			
-			local target = rule[3]
-			local isnot = string.sub(target, 1, 4)
-			local target_ = target
-			
-			if (isnot == "not ") then
-				target_ = string.sub(target, 5)
-			else
-				isnot = ""
-			end
-			
-			if (word_names[target_] ~= nil) then
-				target = isnot .. word_names[target_]
-			elseif (target_ == "ambient") then -- EDIT: implement AMBIENT
-				target = isnot .. target_ .. " (" .. ws_ambientObject .. ")"
-			end
-			
-			if (#custom == 0) then
-				text = text .. rule[2] .. " " .. target
-			else
-				text = text .. custom .. " " .. custom
-			end
-			
-			for a,b in ipairs(tags) do
-				if (b == "mimic") then
-					text = text .. " (mimic)"
-				end
-			end
-
-			for a,b in ipairs(tags) do
-				if (b == "keep") then
-					text = text .. " (keep)"
-				end
-			end
-
-			if (allrules[text] == nil) then
-				allrules[text] = 1
-				count = count + 1
-			else
-				allrules[text] = allrules[text] + 1
-			end
-			i_ = i_ + 1
-		end
-	end
-	
-	local columns = math.min(maxcolumns, math.floor((count - 1) / linelimit) + 1)
-	local columnwidth = math.min(screenw - f_tilesize * 2, columns * f_tilesize * 10) / columns
-	
-	i_ = 1
-	
-	local maxlimit = 4 * linelimit
-	
-	for i,v in pairs(allrules) do
-		local text = i
-		
-		if (i_ <= maxlimit) then
-			local currcolumn = math.floor((i_ - 1) / linelimit) - (columns * 0.5)
-			x = basex + columnwidth * currcolumn + columnwidth * 0.5
-			y = basey + (((i_ - 1) % linelimit) + 1) * f_tilesize * 0.8
-		end
-		
-		if (i_ <= maxlimit-1) then
-			if (v == 1) then
-				writetext(text,0,x,y,name,true,2,true)
-			elseif (v > 1) then
-				writetext(tostring(v) .. " x " .. text,0,x,y,name,true,2,true)
-			end
-		end
-		
-		i_ = i_ + 1
-	end
-	
-	if (i_ > maxlimit-1) then
-		writetext("(+ " .. tostring(i_ - maxlimit) .. ")",0,x,y,name,true,2,true)
-	end
-end
+MF_loadsound('vineboom')
 
 function create(name,x,y,dir,oldx_,oldy_,float_,skipundo_,leveldata_,customdata)
 	local oldx,oldy,float = x,y,0
@@ -410,7 +143,7 @@ function delete(unitid,x_,y_,total_,noinside_)
 				changevisiontarget(unit.fixed)
 			end
 			
-			addundo({"remove",unitname,x,y,dir,unit.values[ID],unit.values[ID],unit.strings[U_LEVELFILE],unit.strings[U_LEVELNAME],unit.values[VISUALLEVEL],unit.values[COMPLETED],unit.values[VISUALSTYLE],unit.flags[MAPLEVEL],unit.strings[COLOUR],unit.strings[CLEARCOLOUR],unit.followed,unit.back_init,unit.originalname,unit.strings[UNITSIGNTEXT],false,unitid,unit.karma},unitid)
+			addundo({"remove",unitname,x,y,dir,unit.values[ID],unit.values[ID],unit.strings[U_LEVELFILE],unit.strings[U_LEVELNAME],unit.values[VISUALLEVEL],unit.values[COMPLETED],unit.values[VISUALSTYLE],unit.flags[MAPLEVEL],unit.strings[COLOUR],unit.strings[CLEARCOLOUR],unit.followed,unit.back_init,unit.originalname,unit.strings[UNITSIGNTEXT],false,unitid,unit.karma,unit.patches},unitid)
 			unit = {}
 			delunit(unitid)
 			MF_remove(unitid)
@@ -456,6 +189,9 @@ function inside(name,x,y,dir_,unitid,leveldata_)
 			if (target == name) and ((verb == "scrawl") or (verb == "jot")) then
 				table.insert(wordins, {object,conds})
 			end
+			if (object == name) and (verb == "isin") and (findnoun(target,nlist.short) or (unitreference[target] ~= nil)) then
+				table.insert(ins, {target,conds})
+			end
 		end
 	end
 	
@@ -466,6 +202,8 @@ function inside(name,x,y,dir_,unitid,leveldata_)
 			if testcond(conds,unitid,x,y) then
 				if (object == "text") then
 					object = "text_" .. name
+				elseif (object == "script") then
+					object = "script_" .. name
 				elseif (object == "glyph") then
 					object = "glyph_" .. name
 				elseif string.sub(object,1,4) == "meta" then
@@ -486,14 +224,25 @@ function inside(name,x,y,dir_,unitid,leveldata_)
 				local did = false -- changes start here
 				for a,mat in pairs(fullunitlist) do -- main change
 						if (a == object) and (object ~= "empty") then
-							if (object ~= "all") and (string.sub(object, 1, 5) ~= "group") then
-							if unitreference[object] ~= nil then
-								create(object,x,y,dir,nil,nil,nil,nil,leveldata)
-								did = true
-							end
+							if (object ~= "charge") and (object ~= "all") and (string.sub(object, 1, 5) ~= "group") then
+								if unitreference[object] ~= nil then
+									create(object,x,y,dir,nil,nil,nil,nil,leveldata)
+									did = true
+								end
 							elseif (object == "all") then
 								createall(v,x,y,unitid,nil,leveldata)
-							did = true
+								did = true
+							elseif (object == "charge") then
+								for _,hmm in ipairs(get_charges_for_effects_on_unitid(unitid,x,y)) do
+									local shoulddo = true
+									if unitreference[hmm] == nil then
+										shoulddo = tryautogenerate(hmm)
+									end
+									if shoulddo then
+										create(hmm,x,y,dir,nil,nil,nil,nil,leveldata)
+										did = true
+									end
+								end
 							end
 						end
 					end
@@ -893,6 +642,8 @@ end
 function getlevelsurrounds(levelid)
 	local level = mmf.newObject(levelid)
 	visit_innerlevelid = tostring(levelid)
+	currenttransform = getname(level)
+
 
 	local loopindex = 1
 	local addedids = {levelid}
@@ -952,6 +703,8 @@ function getlevelsurrounds(levelid)
 		end
 		
 		loopindex = loopindex + 1
+
+
 	end
 
 	-- EDIT: find all texts (including the level itself) at the level's position
@@ -1019,6 +772,36 @@ function getlevelsurrounds(levelid)
 	ws_levelAlignedColumn = not columnFail
 
 	visit_fullsurrounds = result
+
+	local result2 = tostring(dir) .. ","
+	
+	for i,v in ipairs(dirs_diagonals) do
+		result2 = result2 .. dirids[i] .. ","
+		
+		local ox,oy = v[1],v[2]
+		
+		local tileid = (x + ox) + (y + oy) * roomsizex
+		
+		if (unitmap[tileid] ~= nil) then
+			if (#unitmap[tileid] > 0) then
+				for a,b in ipairs(unitmap[tileid]) do
+					if (b ~= levelid) then
+						local unit = mmf.newObject(b)
+						local name = getname(unit)
+						
+						result2 = result2 .. name .. ","
+					end
+				end
+			else
+				result2 = result2 .. "-" .. ","
+			end
+		else
+			result2 = result2 .. "-" .. ","
+		end
+	end
+	
+	generaldata2.strings[LEVELSURROUNDS] = result2
+
 end
 
 function parsesurrounds()
@@ -1204,6 +987,10 @@ function getname(unit,pname_,pnot_)
 		result = "text"
 	elseif (unit.strings[UNITTYPE] ~= "text") and (string.sub(pname,1,5) == "text_") and (pnot == true) then
 		result = "text"
+	elseif (string.sub(result,1,7) == "script_") and (pname == "script") then
+		return "script"
+	elseif (string.sub(result,1,7) == "charge_") and (pname == "charge") then
+		return "charge"
 	elseif string.sub(pname,1,4) == "meta" then
 		if metatext_includenoun or pnot == false or unit.strings[UNITTYPE] == "text" then
 			local include = false
@@ -1233,7 +1020,7 @@ function findnoun(noun,list_,ignoretext)
 	local list = list_ or nlist.full
 
 	for i,v in ipairs(list) do
-		if (v == noun) or ((v == "group") and (string.sub(noun, 1, 5) == "group")) or (string.sub(noun,1,5) == "text_" and v == "text" and ignoretext ~= true) or (string.sub(noun,1,4) == "meta" and v == "all") then
+		if (v == noun) or ((v == "group") and (string.sub(noun, 1, 5) == "group")) or (string.sub(noun,1,5) == "text_" and v == "text" and ignoretext ~= true) or (string.sub(noun,1,7) == "script_" and v == "script" and ignoretext ~= true) or (string.sub(noun,1,7) == "charge_" and v == "charge" and ignoretext ~= true) or (string.sub(noun,1,4) == "meta" and v == "all") then
 			return true
 		end
 	end
@@ -1248,6 +1035,11 @@ function delunit(unitid)
 
 	if (unit ~= nil) then
 		local name = getname(unit, "text")
+		if (string.sub(name, 1, 7) == "script_") then
+			name = "script"
+		elseif (string.sub(name, 1, 7) == "charge_") then
+			name = "charge"
+		end
 		local x,y = unit.values[XPOS],unit.values[YPOS]
 		local unitlist = unitlists[name]
 		local unitlist_ = unitlists[unit.strings[UNITNAME]] or {}
@@ -1483,7 +1275,7 @@ function destroylevel(special_)
 			levelconversions = {{"glitch", {}, "is"}}
 		end
 		--Glitch code ends here.
-	elseif (destroylevel_style ~= "empty") and (destroylevel_style ~= "bonus") then
+	elseif (destroylevel_style ~= "empty") and (destroylevel_style ~= "bonus") and (destroylevel_style ~= "charge") then
 		setsoundname("removal",1)
 	end
 	
@@ -1572,10 +1364,94 @@ function destroylevel_do()
 			HACK_INFINITY = 0
 
 			MF_playsound("infinity")
+		elseif (special == "leave") then
+			writetext("The Level Left", 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { 4, 1 }, 3)
+			HACK_INFINITY = 0
+
+			MF_playsound("infinity")
+		elseif (special == "buble") then
+			writetext("buble", 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { 4, 1 }, 3)
+			HACK_INFINITY = 0
+
+			MF_playsound("infinity")
+		elseif (special == "slotname") then
+			writetext("i dont like your slotname :(", 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { 4, 1 }, 3)
+			HACK_INFINITY = 0
+
+			MF_playsound("infinity")
+		elseif (special == "cheese") then
+			writetext("tryna break something are we?", 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { 4, 1 }, 3)
+			HACK_INFINITY = 0
+
+			MF_playsound("infinity")
+		elseif (special == "list") then
+			local items = {"banana",
+			 "get keke'd lmao",
+			 "chess battle advanced",
+			 "no thank you",
+			 "nah",
+			 "when the baba is not you",
+			 "fire in the hole",
+			 "your taking too too",
+			 "your too too",
+			 "epic fail",
+			 "hi :)",
+			 "sponsored by sponsored sponsors",
+			 "Chriss survy wuz here",
+			 "Hint : alt+f4 to win",
+			 "Oops! Try again!",
+			 "Baba baba baba baba baba!",
+			 "can you beat baba is you with alzheimers disease?",
+			 ":3",
+			 "it says gullible on the ceiling",
+			 "i teleported bread",
+			 "Dont worry! Stisti will fix it!",
+			 "Was it TOO much?",
+			 "Do you know the definition of Insanity?",
+			 "glimble glop",
+			 ":porp",
+			 "eat a brick",
+			 "plorpenbork",
+			 "touch grass please",
+			 "praise be matthew",
+			 "i have no idea",
+			 "mike! show the stats!",
+			 "odourblock technology",
+			 "boo",
+			 "",
+			 "onions",
+			 "something ominous and pigeonlike",
+			 ":("
+			}
+			local randomIndex = math.random(1, #items)
+			local randomItem = items[randomIndex]
+			if  math.random(1, 10) == 1 then 
+				writetext(randomItem, 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { math.random(0, 6), math.random(0, 4) }, 3)
+			else 
+				writetext(randomItem, 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { 4, 1 }, 3)
+			end 
+			if randomItem == ":(" then
+                error("Your Baba Is You ran into a problem and needs to restart. We're just displaying this lua error, and then you can go back to playing.")
+            end
+			HACK_INFINITY = 0
+
+			MF_playsound("infinity")
 		elseif (special == "doom") then
 			writetext("level destroyed", 0, screenw * 0.5 - 12, screenh * 0.5, 0, true, 3, true, { 2, 2 }, 3)
 			HACK_INFINITY = 0
 
+			MF_playsound("infinity")
+		elseif (special == "charge") then
+			writetext("uncharged!",0,screenw * 0.5 - 6,screenh * 0.5,0,true,3,true,{2,2},3)
+
+			HACK_INFINITY = 0
+		
+			MF_playsound("uncharged"..tostring(math.random(1,3)))
+		elseif (special == "visit") then
+			writetext("No Neighbour!",0,screenw * 0.5 - 6,screenh * 0.5,0,true,3,true,{2,2},3)
+
+			HACK_INFINITY = 0
+		
 			MF_playsound("infinity")
 		elseif (special == "bonus") then
 			MF_playsound("bonus")

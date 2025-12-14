@@ -182,8 +182,7 @@ function dovisit(visitdir)
 		end
 	else
 		--If there's nowhere to visit to, destroy the current level instead (like Level Is Weak).
-		destroylevel()
-		destroylevel_do()
+		destroylevel("visit")
 	end
 end
 

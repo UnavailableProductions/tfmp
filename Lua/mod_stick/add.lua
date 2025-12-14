@@ -1,15 +1,15 @@
 -- add double row letters
-table.insert(editor_objlist_order, "text_b_b")
-table.insert(editor_objlist_order, "text_a_a")
+table.insert(editor_objlist_order, "text_b$b")
+table.insert(editor_objlist_order, "text_a$a")
 
 -- add special symbols
 table.insert(editor_objlist_order, "text_comma")
 table.insert(editor_objlist_order, "text_insert_mrl")
 
 -- define double row letters
-editor_objlist["text_b_b"] = 
+editor_objlist["text_b$b"] = 
 {
-	name = "text_b_b",
+	name = "text_b$b",
 	sprite_in_root = false,
 	unittype = "text",
 	tags = {"text","abstract"},
@@ -19,9 +19,9 @@ editor_objlist["text_b_b"] =
 	colour = {4, 0},
 	colour_active = {4, 1},
 }
-editor_objlist["text_a_a"] = 
+editor_objlist["text_a$a"] = 
 {
-	name = "text_a_a",
+	name = "text_a$a",
 	sprite_in_root = false,
 	unittype = "text",
 	tags = {"text","abstract"},

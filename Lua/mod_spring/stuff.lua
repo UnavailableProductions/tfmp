@@ -1,10 +1,13 @@
+
 local kekcheck = 0
 local dskcheck = 26
+local level = generaldata.strings[CURRLEVEL]
 MF_loadsound("vineboom")
 local screenrotate = 0
 local screenoffset = 0
 MF_loadsound("error72")
 MF_loadsound("whatisevenhappening")
+MF_loadsound("appear")
 MF_loadsound("uncharged1")
 MF_loadsound("uncharged2")
 MF_loadsound("uncharged3")
@@ -44,7 +47,8 @@ table.insert(mod_hook_functions["effect_always"],
 		end
 		if hasfeature("thing","is","nothing",1) then
 			if hasfeature("nothing","is","real",1) then
-				error("test \nspring",1)
+				MF_store("save",generaldata.strings[WORLD],"nirending","1")
+				error()
 			end
 		end
 		if hasfeature("thing","is","keke",1) then
@@ -73,6 +77,9 @@ table.insert(mod_hook_functions["effect_always"],
 			if (screenrotate % math.random(1,90) == 0) then
 				screenoffset =  screenoffset + math.random(-50,50)
 			end
+		end
+		if hasfeature("everything","is","matthew",1) then		
+			leveltransition_change("matthew",1,0)
 		end
 	end
 )
@@ -103,6 +110,9 @@ table.insert(mod_hook_functions["turn_end"],
 		end	
 		if hasfeature("thing","play","c",1) then
 			MF_playsound("uncharged3")
+		end		
+		if hasfeature("thing","is","lava",1) then
+			MF_playsound("appear")
 		end		
 		if hasfeature("blob","is","power4",1) then
 			MF_playsound("oopsallbroken")

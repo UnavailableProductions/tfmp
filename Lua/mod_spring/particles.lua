@@ -458,14 +458,24 @@ particletypes =
 	},
 	void =
 	{
-		amount = 144,
+		amount = 500,
 		animation = 11,
-		colour = {6, 4},
+		colour = {1, 0},
 		extra = 
 			function(unitid)
 				local unit = mmf.newObject(unitid)
+
+
+
+				local infrontval = math.random(0,1)
+
+				if infrontval == 1 then
+					unit.flags[INFRONT] = true
+				else
+					unit.flags[INFRONT] = false
+				end
 				
-				unit.values[YVEL] = math.random(-2,-1)
+				unit.values[YVEL] = math.random(-2,-1) * 0.5
 				unit.values[XVEL] = math.random(-15,15) * 0.01
 				unit.angle = math.random(0,89)
 				unit.scaleX = 8 * (unit.values[YVEL] * -0.3)

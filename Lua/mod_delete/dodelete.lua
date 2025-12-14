@@ -289,8 +289,7 @@ table.insert(mod_hook_functions["always"], function()
     end
 end)
 -- modify rules that contain dead units
-local old_addoption = addoption
-function addoption(option,conds_,ids,visible,notrule,tags_,visualonly_)
+function old_addoption(option,conds_,ids,visible,notrule,tags_,visualonly_)
     local target = option[1]
     local effect = option[3]
     local notpref = false

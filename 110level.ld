@@ -1,6 +1,7 @@
 [general]
 name=Crafts
 customparent=98level
+unlocklevels=20level
 author=Ember
 palette=ocean.png
 paletteroot=1

@@ -38,6 +38,7 @@ function clearunits(restore_)
 	leveldata.currcolour = 0
 	poweredstatus = {}
 	specialtiling = {}
+	agreeexist = {}
 	
 	visiontargets = {}
 	vision_rendered = {}
@@ -98,6 +99,8 @@ function clear()
 	condstatus = {}
 	emptydata = {}
 	leveldata = {}
+	agreeexist = {}
+
 	leveldata.colours = {}
 	leveldata.currcolour = 0
 	poweredstatus = {}

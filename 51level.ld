@@ -1,6 +1,7 @@
 [general]
 name=the void
 customparent=
+unlocklevels=20level
 author=Ember
 palette=default.png
 paletteroot=1

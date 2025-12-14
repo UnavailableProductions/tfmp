@@ -60,12 +60,12 @@ function formletterunits(x,y,lettermap,dir,database_)
 				cword[1] = cword[1]:gsub( "insert_mrl", "&")
 				
 				for l=1,#cword[1],1 do
-					if (string.sub(cword[1], l, l) == "_") then
+					if (string.sub(cword[1], l, l) == "§") then
 						lethasrow2 = true
 						row1 = string.sub(cword[1], 1, l-1)
-						row1 = row1:gsub( "_", "")
+						row1 = row1:gsub( "§", "")
 						row2 = row2 .. string.sub(cword[1], l)
-						row2 = row2:gsub( "_", "")
+						row2 = row2:gsub( "§", "")
 						row1 = row1:gsub( ",", "")
 						row2 = row2:gsub( ",", "")
 						--babaprint("_ found")

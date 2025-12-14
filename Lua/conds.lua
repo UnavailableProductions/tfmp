@@ -12,5 +12,8 @@ customconditions =
 	["gh36level"] = {{"makerule","belt","is","shift"}},
 	["gh41level"] = {{"breakrule","tile","is","safe"}},
 	["gh35level"] = {{"level","stisti"}},
+	["1289level"] = {{"amount","rouxlskaard",0,"exact"}},
+	["1357level"] = {{"amount","text_is",5,"exact"}},
+	["1369level"] = {{"amount","tags_sink",0,"exact"}},
 }
 

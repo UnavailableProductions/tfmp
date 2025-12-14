@@ -1,5 +1,3 @@
-
-
 function moveblock(onlystartblock_)
 	-- @Mods(Turning Text) - Override reason: directional shift updates the shifted objects direction here
 	local onlystartblock = onlystartblock_ or false
@@ -443,6 +441,8 @@ function moveblock(onlystartblock_)
 								if ((targetname ~= name) or ((metatext_fixquirks and
 										(getname(vunit,"text") == "text" and getname(unit,"text") == "text" and checkiftextrule(name,"is","tele",unitid)))
 										or (getname(vunit,"glyph") == "glyph" and getname(unit,"glyph") == "glyph" and checkiftextrule(name,"is","tele",unitid,true,"glyph"))
+										or (getname(vunit,"script") == "script" and getname(unit,"script") == "script" and checkiftextrule(name,"is","tele",unitid,nil,"script"))
+										or (getname(vunit,"charge") == "charge" and getname(unit,"charge") == "charge" and checkiftextrule(name,"is","tele",unitid,nil,"charge"))
 										or (getmetalevel(targetname) == getmetalevel(name) and checkiftextrule(name,"is","tele",nil,"meta"..getmetalevel(name)))))
 										and (v ~= unitid) then
 									local teles = istele
@@ -458,7 +458,9 @@ function moveblock(onlystartblock_)
 											if (b ~= unitid) and (telename == name
 													or (metatext_fixquirks and getname(tele,"text") == "text" and getname(unit,"text") == "text" and checkiftextrule(name,"is","tele",unitid,true))
 													or (getmetalevel(telename) == getmetalevel(name) and checkiftextrule(name,"is","tele",unitid,true,"meta"..getmetalevel(name)))
-													or (getname(tele,"glyph") == "glyph" and getname(unit,"glyph") == "glyph" and checkiftextrule(name,"is","tele",unitid,true,"glyph"))) and (tele.flags[DEAD] == false) then
+													or (getname(tele,"glyph") == "glyph" and getname(unit,"glyph") == "glyph" and checkiftextrule(name,"is","tele",unitid,true,"glyph"))) and (tele.flags[DEAD] == false) 
+													or (getname(tele,"script") == "script" and getname(unit,"script") == "script" and checkiftextrule(name,"is","tele",unitid,true,"script"))
+													or (getname(tele,"charge") == "charge" and getname(unit,"charge") == "charge" and checkiftextrule(name,"is","tele",unitid,true,"charge")) then
 												table.insert(teletargets, b)
 											end
 										end
@@ -564,6 +566,7 @@ function block(small_)
 			for id,unit in ipairs(isdone) do
 				table.insert(doned, unit)
 			end
+
 			
 			if (#doned > 0) then
 				setsoundname("turn",10)
@@ -780,7 +783,7 @@ function block(small_)
 		end
 	end
 	
-	if (generaldata.strings[WORLD] == "museum") then
+	if true then
 		local ishold = getunitswitheffect("hold",false,delthese)
 		local holders = {}
 		
@@ -1494,21 +1497,22 @@ function block(small_)
 				end
 				
 				local exists = false
+				print(v)
 				
-				if (v ~= "text") and (v ~= "all") and (string.sub(v,1,4) ~= "meta") then
+				if (v ~= "text") and (v ~= "charge") and (v ~= "script") and (v ~= "all") and (string.sub(v,1,4) ~= "meta") then
 					for b,mat in pairs(fullunitlist) do
 						if (b == v) then
 							exists = true
 							break
 						end
 					end
-					if not exists and string.sub(v,1,5) == "text_" then
+					if not exists and (string.sub(v,1,5) == "text_" or string.sub(v,1,7) == "script_") then
 						exists = tryautogenerate(v)
 					end
 				else
-					if (v ~= "text") and (string.sub(v,1,4) ~= "meta") then
+					if (v ~= "text") and (string.sub(v,1,4) ~= "meta") and (v ~= "script") and (v ~= "charge") then
 						exists = true
-					elseif (v ~= "text") then
+					elseif (string.sub(v,1,4) == "meta") then
 						local level = string.sub(v, 5)
 						if tonumber(level) ~= nil and tonumber(level) >= -1 then
 							local basename = string.gsub(name,"text_","")
@@ -1526,7 +1530,7 @@ function block(small_)
 								exists = tryautogenerate(newname)
 							end
 						end
-					else
+					elseif (v == "text") then
 						for b,mat in pairs(fullunitlist) do
 							if (b == "text_" .. name) then
 								exists = true
@@ -1536,6 +1540,18 @@ function block(small_)
 						if not exists and string.sub(name,1,5) == "text_" then
 							exists = tryautogenerate("text_" .. name,name)
 						end
+					elseif (v == "script") then
+						for b,mat in pairs(fullunitlist) do
+							if (b == "script_" .. name) then
+								exists = true
+								break
+							end
+						end
+						if not exists then
+							exists = tryautogenerate("script_" .. name,name)
+						end
+					elseif (v == "charge") then
+						exists = true
 					end
 				end
 				
@@ -1550,7 +1566,7 @@ function block(small_)
 								local thing = mmf.newObject(b)
 								local thingname = thing.strings[UNITNAME]
 								
-								if (thing.flags[CONVERTED] == false) and ((thingname == v) or ((thing.strings[UNITTYPE] == "text") and (v == "text") and (unit.strings[UNITTYPE] ~= "text" or thingname == "text_" .. name)) or "meta"..getmetalevel(thingname) == v) then
+								if (thing.flags[CONVERTED] == false) and ((thingname == v) or (getname(thing,"script") == v) or ((thing.strings[UNITTYPE] == "text") and (v == "text") and (unit.strings[UNITTYPE] ~= "text" or thingname == "text_" .. name)) or ((thing.strings[UNITTYPE] == "charge") and (v == "charge") and (unit.strings[UNITTYPE] ~= "charge" or thingname == "charge_" .. name)) or "meta"..getmetalevel(thingname) == v) then
 									domake = false
 								end
 							end
@@ -1561,9 +1577,27 @@ function block(small_)
 						if (findnoun(v,nlist.short,true) == false) then
 							create(v,x,y,dir,x,y,nil,nil,leveldata)
 						elseif (v == "text") then
-							if (name ~= "text") and (name ~= "all") then
+							if (name ~= "text") and (name ~= "all") and (name ~= "script") and (name ~= "charge") then
 								create("text_" .. name,x,y,dir,x,y,nil,nil,leveldata)
 								updatecode = 1
+							end
+						elseif (v == "script") then
+							if (name ~= "script") and (name ~= "all") and (name ~= "text") and (name ~= "charge") then
+								create("script_" .. name,x,y,dir,x,y,nil,nil,leveldata)
+							end
+						elseif (v == "charge") then
+							local uid = 2
+							if unit ~= nil then
+								uid = unit.fixed
+							end
+							for p,q in ipairs(get_charges_for_effects_on_unitid(uid,x,y)) do
+								local shoulddo = true
+								if unitreference[q] == nil then
+									shoulddo = tryautogenerate(q)
+								end
+								if shoulddo then
+									create(q,x,y,dir,x,y,nil,nil,leveldata)
+								end
 							end
 						elseif string.sub(v, 1, 4) == "meta" then
 							local level = string.sub(v, 5)
@@ -1597,10 +1631,76 @@ function block(small_)
 		
 		local isprint = getunitswithverb("print",delthese)
 
-		--@Merge( print x extrem )
-		local istype = getunitswithverb("type", delthese)
-
+		local istype = getunitswithverb("type",delthese)
+		
 		for id, ugroup in ipairs(istype) do
+			local v = ugroup[1]
+			v = "text_" .. v
+
+			for a, unit in ipairs(ugroup[2]) do
+				local x, y, dir, name = 0, 0, 4, ""
+
+				local leveldata = {}
+
+				if (ugroup[3] ~= "empty") then
+					x, y, dir = unit.values[XPOS], unit.values[YPOS], unit.values[DIR]
+					name = getname(unit)
+					leveldata = { unit.strings[U_LEVELFILE], unit.strings[U_LEVELNAME], unit.flags[MAPLEVEL], unit.values[VISUALLEVEL], unit.values[VISUALSTYLE], unit.values[COMPLETED], unit.strings[COLOUR], unit.strings[CLEARCOLOUR] }
+				else
+					x = math.floor(unit % roomsizex)
+					y = math.floor(unit / roomsizex)
+					name = "empty"
+					dir = emptydir(x, y)
+				end
+
+				if (dir == 4) then
+					dir = fixedrandom(0, 3)
+				end
+
+				if unitreference[v] ~= nil then
+					local domake = true
+
+					if (name ~= "empty") then
+						local thingshere = findallhere(x, y)
+
+						if (#thingshere > 0) then
+							for a, b in ipairs(thingshere) do
+								local thing = mmf.newObject(b)
+								local thingname = thing.strings[UNITNAME]
+
+								if (thing.flags[CONVERTED] == false) and ((thingname == v) or ((thing.strings[UNITTYPE] == "text") and (v == "text"))) then
+									domake = false
+								end
+							end
+						end
+					end
+
+					if domake then
+						if (findnoun(v, nlist.short) == false) then
+							create(v, x, y, dir, x, y, nil, nil, leveldata)
+						elseif (v == "text") then
+							if (name ~= "text") and (name ~= "all") then
+								create("text_" .. name, x, y, dir, x, y, nil, nil, leveldata)
+								updatecode = 1
+							end
+						elseif (string.sub(v, 1, 5) == "group") then
+							--[[
+                            local mem = findgroup(v)
+
+                            for c,d in ipairs(mem) do
+                                local thishere = findtype({d},x,y,nil,true)
+
+                                if (#thishere == 0) then
+                                    create(d,x,y,dir,x,y,nil,nil,leveldata)
+                                end
+                            end
+                            ]]--
+						end
+					end
+				end
+			end
+		end
+		for id, ugroup in ipairs(isprint) do
 			local v = ugroup[1]
 			v = "text_" .. v
 
@@ -1743,29 +1843,33 @@ function block(small_)
 							if (#flag > 0) then
 								for c,d in ipairs(flag) do
 									if floating(d,unit.fixed,x,y) and (generaldata.values[MODE] == 0) then
-										if (generaldata.strings[WORLD] == generaldata.strings[BASEWORLD]) then
-											MF_particles("unlock",x,y,10,1,4,1,1)
-											MF_end(unit.fixed,d)
-											break
-										elseif (editor.values[INEDITOR] ~= 0) then
-											local pmult = checkeffecthistory("win")
-									
-											MF_particles("win",x,y,10 * pmult,2,4,1,1)
-											MF_end_single()
-											MF_win()
-											break
-										else
-											local pmult = checkeffecthistory("win")
-											
-											local mods_run = do_mod_hook("levelpack_end", {})
-											
-											if (mods_run == false) then
+										if testwinconds() then
+											if (generaldata.strings[WORLD] == generaldata.strings[BASEWORLD]) then
+												MF_particles("unlock",x,y,10,1,4,1,1)
+												MF_end(unit.fixed,d)
+												break
+											elseif (editor.values[INEDITOR] ~= 0) then
+												local pmult = checkeffecthistory("win")
+										
 												MF_particles("win",x,y,10 * pmult,2,4,1,1)
 												MF_end_single()
 												MF_win()
-												MF_credits(1)
+												break
+											else
+												local pmult = checkeffecthistory("win")
+												MF_particles("win",x,y,10 * pmult,2,4,1,1)
+
+												
+												local mods_run = do_mod_hook("levelpack_end", {})
+												
+												if (mods_run == false) then
+													MF_particles("win",x,y,10 * pmult,2,4,1,1)
+													MF_end_single()
+													MF_win()
+													MF_credits(1)
+												end
+												break
 											end
-											break
 										end
 									end
 								end
@@ -1786,6 +1890,10 @@ function block(small_)
 								if floating(d,unit.fixed,x,y) then
 									doreset = true
 									break
+								else
+									local pmult = checkeffecthistory("win")
+									MF_particles("win",x,y,10 * pmult,2,2,1,1)
+									setsoundname("turn",6,sound)
 								end
 							end
 						end
@@ -1831,9 +1939,14 @@ function block(small_)
 							for c,d in ipairs(flag) do
 								if floating(d,unit.fixed,x,y) and (hasfeature(b[1],"is","done",d,x,y) == nil) and (hasfeature(b[1],"is","end",d,x,y) == nil) then
 									local pmult = checkeffecthistory("win")
+									if testwinconds() then
+										MF_particles("win",x,y,10 * pmult,2,4,1,1)
+										MF_win()
+									else
+										MF_particles("win",x,y,10 * pmult,2,2,1,1)
+										setsoundname("turn",6,sound)
+									end
 									
-									MF_particles("win",x,y,10 * pmult,2,4,1,1)
-									MF_win()
 									break
 								end
 							end
@@ -1842,7 +1955,7 @@ function block(small_)
 				end
 			end
 		end
-	end
+	end	
 	
 	delthese,doremovalsound = handledels(delthese,doremovalsound)
 	
@@ -2132,7 +2245,9 @@ function levelblock()
 								end
 
 								if canwin and (hasfeature("level","is","win",1,i,j) ~= nil) and floating_level(2,i,j) then
-									victory = true
+									if testwinconds() then
+										victory = true
+									end
 								end
 								
 								if canbonus and ws_isLevelPlayer(i,j) and floating_level(2,i,j) then -- EDIT: Replaced long check with function
@@ -2140,7 +2255,9 @@ function levelblock()
 								end
 								
 								if canend and ws_isLevelPlayer(i,j) and floating_level(2,i,j) then -- EDIT: Same as above
-									ending = true
+									if testwinconds() then
+										ending = true
+									end
 								end
 								
 								if victory then
@@ -3084,21 +3201,23 @@ function levelblock()
 							addundo({"bonus",1})
 						end
 						
-						if canwin then
-							MF_win()
-							return
-						end
-						
-						if canend and (generaldata.strings[WORLD] ~= generaldata.strings[BASEWORLD]) then
-							if (editor.values[INEDITOR] ~= 0) then
-								MF_end_single()
+						if testwinconds() then
+							if canwin then
 								MF_win()
 								return
-							else
-								MF_end_single()
-								MF_win()
-								MF_credits(1)
-								return
+							end
+							
+							if canend and (generaldata.strings[WORLD] ~= generaldata.strings[BASEWORLD]) then
+								if (editor.values[INEDITOR] ~= 0) then
+									MF_end_single()
+									MF_win()
+									return
+								else
+									MF_end_single()
+									MF_win()
+									MF_credits(1)
+									return
+								end
 							end
 						end
 					elseif (action == "defeat") then
@@ -3581,12 +3700,21 @@ function levelblock()
 								end
 								
 								if doit then
+								if testwinconds() then
 									canwin = true
 									if action == "win" then
+										for c,d in ipairs(allyous) do
+											local unit = mmf.newObject(d)
+											local pmult,sound = checkeffecthistory("win")
+											MF_particles("win",unit.values[XPOS],unit.values[YPOS],10 * pmult,2,4,1,1)
+										end
+									end
+								else
 									for c,d in ipairs(allyous) do
 										local unit = mmf.newObject(d)
 										local pmult,sound = checkeffecthistory("win")
-										MF_particles("win",unit.values[XPOS],unit.values[YPOS],10 * pmult,2,4,1,1)
+										MF_particles("win",unit.values[XPOS],unit.values[YPOS],10 * pmult,2,2,1,1)
+										setsoundname("turn",6,sound)
 									end
 								end
 							end
@@ -3893,6 +4021,7 @@ function levelblock()
 					end
 					
 					if found then
+						if testwinconds() then
 						if (generaldata.strings[WORLD] == generaldata.strings[BASEWORLD]) and (editor.values[INEDITOR] == 0) then
 							MF_playsound("doneall_c")
 							MF_allisdone()
@@ -3915,6 +4044,7 @@ function levelblock()
 								MF_credits(2)
 							end
 							break
+							end
 						end
 					end
 				end

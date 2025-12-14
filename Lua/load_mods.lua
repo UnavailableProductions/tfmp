@@ -24,7 +24,8 @@ local load_order = {
 	"mod_word_salad",
 	"mod_delete",
 	"mod_stick",
-    "load_last"
+    "load_last",
+	"mod_scripts"
 }
 
 for _, folder in ipairs(load_order) do

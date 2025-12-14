@@ -14,9 +14,8 @@
 
 
 -- :)
-local oldeffectblock = effectblock
 -- @Merge(injection)
-function effectblock()
+function oldeffectblock()
 	oldeffectblock()
 	if featureindex["love"] ~= nil and metatext_egg then
 		local valid = true

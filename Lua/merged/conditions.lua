@@ -2189,7 +2189,7 @@ function testcond(conds,unitid,x_,y_,autofail_,limit_,checkedconds_,ignorebroken
 
 							if (mem ~= nil) then
 								for c,d in ipairs(mem) do
-									if notnoun or d == "text" then
+									if notnoun or d == "text" or d == "script" or d == "charge"  then
 										table.insert(params, d)
 									elseif (string.sub(d, 1, 4) == "meta") then
 										local insert = #params

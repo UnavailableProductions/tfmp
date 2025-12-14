@@ -1,0 +1,141 @@
+All basegame function locations (sorted by file)
+
+MERGED\blocks.Lua :
+	moveblock(onlystartblock_)
+	block(small_)
+	levelblock()
+	effectblock()
+	findplayer(undoing)
+	startblock(light_)
+MERGED\clears.Lua
+	clearunits(restore_)
+	clear()
+MERGED\conditions.Lua
+	Basegame conditions
+	Pressdirs
+	testcond()
+MERGED\convert.Lua
+	dolevelconversions()
+	doconvert()
+	convert()
+	conversion()
+MERGED\editor_objectlist_func
+	editor_currobjlist_add()
+MERGED\effects.Lua
+	effects()
+	doeffect()
+MERGED\ending.Lua
+	ending()
+	ending_load()
+	allisdone()
+	dointro()
+MERGED\features.Lua
+	findfeature()
+	hasfeature()
+	getunitswitheffect()
+	getunitverbtargets()
+	getunitswithverb()
+MERGED\letterunits.Lua
+	formlettermap()
+	findletterwords()
+MERGED\load.Lua
+	init()
+MERGED\map.lua 
+	displaysigntext()
+	uplevel()
+	unlockeffect()
+	mapunlock()
+	gateindicatorcheck()
+	revealpaths()
+MERGED\mapcursor.lua
+	mapcursor_move()
+	mapcursor_enter()
+	mapcursor_load()
+	mapcursor_idle()
+	mapcursor_hardset()
+	mapcursor_levelstart()
+	mapcursor_displayname()
+	idleblockcheck()
+	cursorcheck()
+	function mapcursor_tofront()
+	hidecursor()
+	mapcursor_setonlevel()
+MERGED\menu.Lua
+	changemenu()
+MERGED\metadata.Lua
+	getmetadata()
+MERGED\movement.lua
+	movecommand()
+	move()
+	check()
+	dopush()
+	trypush()
+	add_moving_units()
+MERGED\rules.lua (our beloved <3)
+	codecheck()
+	calculatesentences()
+	docode()
+	addoption()
+	code()
+	findwordunits()
+	postrules()
+	subrules()
+	addbaserule()
+	grouprules()
+	ruleblockeffect()
+MERGED\syntax.lua
+	command()
+	setunitmap()
+	command_auto()
+	addunit()
+	createall()
+MERGED\tools.lua
+	create()
+	delete() 
+	inside()
+	isgone()
+	floating()
+	simplecheck()
+	findfears()
+	getlevelsurrounds()
+	parsesurrounds()
+	update()
+	findtype()
+	getmat()
+	getmat_text()
+	getname()
+	findnoun()
+	delunit()
+	destroylevel()
+	destroylevel_do()
+	find_group()
+	updatedir()
+	findall()
+MERGED\undo.lua
+	undo()
+	newundo()
+MERGED\update.lua
+	doupdate()
+MERGED\updatetools.lua
+	findobstacle()
+	findallhere()
+	inbounds()
+	findtype()
+	findfeatureat()
+	intersect()
+	findintersect()
+	intersectobj()
+MOD_EXTREM\spin.lua
+	statusblock()
+MOD_GLYPH\syntax.Lua
+	createall_single()
+MOD_PATASHU\blocks.lua
+	resetlevel()
+MOD_STICK\letterunits.lua
+	formletterunits()
+DEAUTO.lua() !this lua file does nothing in the grand scheme of things
+	command() !duplicate func 
+CAMERASTUFF.Lua
+	updateall()
+OVERRIDES.Lua
+	writerules()

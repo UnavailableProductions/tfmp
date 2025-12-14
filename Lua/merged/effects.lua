@@ -1,5 +1,10 @@
 function effects(timer)
-	doeffect(timer,nil,"win","unlock",1,2,20,{2,4})
+	if testwinconds() then
+		doeffect(timer,nil,"win","unlock",1,2,20,{2,4})
+	else
+		doeffect(timer,nil,"win","glow",1,2,20,{2,2})
+	end
+	
 	doeffect(timer,nil,"reset","unlock",1,2,20,{3,1})
 	doeffect(timer,nil,"best","unlock",6,30,2,{2,4})
 	doeffect(timer,nil,"router","unlock",2,2,20,{4,4})
@@ -11,11 +16,27 @@ function effects(timer)
 	doeffect(timer,nil,"bonus","bonus",1,2,20,{4,1})
 	doeffect(timer,nil,"wonder","wonder",1,10,5,{0,3})
 	doeffect(timer,nil,"sad","tear",1,2,20,{3,2})
+	doeffect(timer,nil,"angry","angry",1,10,5,{2,2})
+	doeffect(timer,nil,"happy","happy",1,10,5,{5,4})
 	doeffect(timer,nil,"sleep","sleep",1,2,60,{3,2})
 	doeffect(timer,nil,"broken","error",3,10,8,{2,2})
 	doeffect(timer,nil,"pet","pet",1,0,50,{3,1},"nojitter")
 	doeffect(timer, nil, "toxic", "hot", 1, 80, 10, { 0, 1 })
 
+	--tfmp effects
+	doeffect(timer, nil, "leave", "error",10,1,8,{0,3})
+	doeffect(timer, nil, "stagnant", "unlock",1,2,20,{1,3}, "inwards")
+	doeffect(timer, nil, "mineeffect", "glow",1,5,20,{3,1}, "inwards")
+	doeffect(timer, nil, "bauble", "hot",1,2,20,{2,2}, "inwards")
+
+	if testwinconds() then
+		doeffect(timer,nil,"finish","unlock",1,2,20,{2,4})
+		doeffect(timer,nil,"swedish","glow",1,2,20,{2,2})
+	else
+		doeffect(timer,nil,"finish","glow",1,2,20,{2,2})
+		doeffect(timer,nil,"swedish","unlock",1,2,20,{2,4})
+	end
+	
 	doeffect(timer,nil,"power","electricity",2,5,8,{2,4})
 	doeffect(timer,nil,"power2","electricity",2,5,8,{5,4})
 	doeffect(timer,nil,"power3","electricity",2,5,8,{4,4})

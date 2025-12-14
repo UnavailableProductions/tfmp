@@ -29,6 +29,9 @@ table.insert(editor_objlist_order, "glyph_helichoper")
 table.insert(editor_objlist_order, "keith")
 table.insert(editor_objlist_order, "text_keith")
 
+table.insert(editor_objlist_order, "pigeon")
+table.insert(editor_objlist_order, "text_pigeon")
+
 table.insert(editor_objlist_order, "monty")
 table.insert(editor_objlist_order, "text_monty")
 
@@ -56,11 +59,17 @@ table.insert(editor_objlist_order, "text_frozenbarrier")
 table.insert(editor_objlist_order, "log")
 table.insert(editor_objlist_order, "text_log")
 
+table.insert(editor_objlist_order, "lego")
+table.insert(editor_objlist_order, "text_lego")
+
 table.insert(editor_objlist_order, "taking")
 table.insert(editor_objlist_order, "text_taking")
 
 table.insert(editor_objlist_order, "zen")
 table.insert(editor_objlist_order, "text_zen")
+
+table.insert(editor_objlist_order, "alty")
+table.insert(editor_objlist_order, "text_alty")
 
 table.insert(editor_objlist_order, "wood")
 table.insert(editor_objlist_order, "text_wood")
@@ -100,30 +109,42 @@ table.insert(editor_objlist_order, "text_tophat")
 
 -- text separated from object
 
+table.insert(editor_objlist_order, "text_twice")
 table.insert(editor_objlist_order, "text_pointed")
 table.insert(editor_objlist_order, "text_shocked")
 table.insert(editor_objlist_order, "text_nocba")
 table.insert(editor_objlist_order, "text_keked")
 table.insert(editor_objlist_order, "text_your")
 table.insert(editor_objlist_order, "text_my")
+table.insert(editor_objlist_order, "text_expired")
 
 table.insert(editor_objlist_order, "text_of")
+table.insert(editor_objlist_order, "text_leaves")
 table.insert(editor_objlist_order, "text_both")
 table.insert(editor_objlist_order, "text_too")
+table.insert(editor_objlist_order, "text_mask")
+table.insert(editor_objlist_order, "text_agrees")
+table.insert(editor_objlist_order, "text_forget")
 
 table.insert(editor_objlist_order, "text_mine")
+table.insert(editor_objlist_order, "text_reveal")
 table.insert(editor_objlist_order, "text_free")
 table.insert(editor_objlist_order, "text_stagnant")
+table.insert(editor_objlist_order, "text_sober")
 table.insert(editor_objlist_order, "text_long")
+table.insert(editor_objlist_order, "text_short")
+table.insert(editor_objlist_order, "text_pause")
 table.insert(editor_objlist_order, "text_shock")
 table.insert(editor_objlist_order, "text_finish")
 table.insert(editor_objlist_order, "text_leave")
 table.insert(editor_objlist_order, "text_swedish")
+table.insert(editor_objlist_order, "text_ornament")
+table.insert(editor_objlist_order, "text_bauble")
 
-table.insert(editor_objlist_order, "text_c_you")
-table.insert(editor_objlist_order, "text_c_mine")
-table.insert(editor_objlist_order, "text_c_push")
-table.insert(editor_objlist_order, "text_c_win")
+table.insert(editor_objlist_order, "text_variable1")
+table.insert(editor_objlist_order, "text_variable2")
+table.insert(editor_objlist_order, "text_variable3")
+table.insert(editor_objlist_order, "text_define")
 
 table.insert(editor_objlist_order, "text_everything")
 table.insert(editor_objlist_order, "text_anything")
@@ -133,7 +154,7 @@ table.insert(editor_objlist_order, "text_clothing")
 table.insert(editor_objlist_order, "text_thing")
 table.insert(editor_objlist_order, "text_76237529thing")
 table.insert(editor_objlist_order, "text_insert")
-
+table.insert(editor_objlist_order, "text_tags")
 
 table.insert(editor_objlist_order, "text_lambda")
 
@@ -142,9 +163,18 @@ table.insert(editor_objlist_order, "text_press_a")
 table.insert(editor_objlist_order, "text_press_s")
 table.insert(editor_objlist_order, "text_press_d")
 table.insert(editor_objlist_order, "text_press_space")
+table.insert(editor_objlist_order, "text_press_undone")
+table.insert(editor_objlist_order, "text_undoing")
 table.insert(editor_objlist_order, "text_moving")
 table.insert(editor_objlist_order, "text_moved")
 
+--if statements
+table.insert(editor_objlist_order, "text_if")
+table.insert(editor_objlist_order, "text_cond")
+table.insert(editor_objlist_order, "text_ifcond")
+table.insert(editor_objlist_order, "text_rule")
+table.insert(editor_objlist_order, "text_ifrule")
+table.insert(editor_objlist_order, "text_then")
 -- cursed text 
 
 table.insert(editor_objlist_order, "text_negone")
@@ -175,20 +205,23 @@ table.insert(editor_objlist_order, "text_pentagon")
 table.insert(editor_objlist_order, "text_divide")
 table.insert(editor_objlist_order, "text_-123=456+789_")
 
+-- class
+table.insert(editor_objlist_order, "text_class")
 -- This defines the exact data for them (note that since the sprites are specific to this levelpack, sprite_in_root must be false!)
 
-editor_objlist["text_c_you"] = 
-{
-    name = "text_c_you",
-    sprite_in_root = false,
-    unittype = "text",
-    tags = {"text","abstract"},
-    tiling = -1,
-    type = 0,
-    layer = 20,
-    colour = {4,0},
-    colour_active = {4,1},
+
+editor_objlist["text_class"] = {
+	name = "text_class",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"abstract","text"},
+	tiling = -1,
+	type = 2,
+	layer = 20,
+	colour = {0, 2},
+	colour_active = {0, 3}
 }
+
 editor_objlist["text_of"] = 
 {
 	name = "text_of",
@@ -202,7 +235,19 @@ editor_objlist["text_of"] =
 	colour_active = {0, 3},
 	argtype = {0, 2},
 }
-
+editor_objlist["text_leaves"] = 
+{
+	name = "text_leaves",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract","text_verb"},
+	tiling = -1,
+	type = 1,
+	layer = 20,
+	colour = {0, 1},
+	colour_active = {0, 3},
+	argtype = {0, 2},
+}
 editor_objlist["text_both"] = 
 {
 	name = "text_both",
@@ -242,6 +287,32 @@ editor_objlist["text_too"] =
 	colour_active = {0, 3},
 	argtype = {0, 2},
 }
+editor_objlist["text_define"] = 
+{
+	name = "text_define",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract","text_verb"},
+	tiling = -1,
+	type = 1,
+	layer = 20,
+	colour = {0, 1},
+	colour_active = {0, 3},
+	argtype = {0, 2},
+}
+editor_objlist["text_mask"] = 
+{
+	name = "text_mask",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract","text_verb"},
+	tiling = -1,
+	type = 1,
+	layer = 20,
+	colour = {4,0},
+	colour_active = {4,1},
+	argtype = {0, 2},
+}
 editor_objlist["mine"] = 
 {
 	name = "text_mine",
@@ -254,41 +325,29 @@ editor_objlist["mine"] =
 	colour = {3,0},
 	colour_active = {3,1},
 }
-editor_objlist["c_mine"] = 
+editor_objlist["text_ornament"] = 
 {
-	name = "text_c_mine",
+	name = "text_ornament",
 	sprite_in_root = false,
 	unittype = "text",
 	tags = {"text","abstract"},
 	tiling = -1,
-	type = 0,
+	type = 2,
 	layer = 20,
-	colour = {3,0},
-	colour_active = {3,1},
+	colour = {2,1},
+	colour_active = {2,2},
 }
-editor_objlist["c_push"] = 
+editor_objlist["text_bauble"] = 
 {
-	name = "text_c_push",
+	name = "text_bauble",
 	sprite_in_root = false,
 	unittype = "text",
 	tags = {"text","abstract"},
 	tiling = -1,
-	type = 0,
+	type = 2,
 	layer = 20,
-	colour = {6,0},
-	colour_active = {6,1},
-}
-editor_objlist["c_win"] = 
-{
-	name = "text_c_win",
-	sprite_in_root = false,
-	unittype = "text",
-	tags = {"text","abstract"},
-	tiling = -1,
-	type = 0,
-	layer = 20,
-	colour = {6,1},
-	colour_active = {2,4},
+	colour = {2,1},
+	colour_active = {2,2},
 }
 editor_objlist["shock"] = 
 {
@@ -326,9 +385,33 @@ editor_objlist["free"] =
 	colour = {5,0},
 	colour_active = {5,2},
 }
+editor_objlist["short"] = 
+{
+	name = "text_short",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 2,
+	layer = 20,
+	colour = {5,0},
+	colour_active = {5,2},
+}
 editor_objlist["text_stagnant"] = 
 {
 	name = "text_stagnant",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 2,
+	layer = 20,
+	colour = {1,1},
+	colour_active = {1,3},
+}
+editor_objlist["text_sober"] = 
+{
+	name = "text_sober",
 	sprite_in_root = false,
 	unittype = "text",
 	tags = {"text","abstract"},
@@ -362,6 +445,18 @@ editor_objlist["text_leave"] =
 	colour = {0,1},
 	colour_active = {0,3},
 }
+editor_objlist["text_reveal"] = 
+{
+	name = "text_reveal",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 2,
+	layer = 20,
+	colour = {4,0},
+	colour_active = {4,1},
+}
 editor_objlist["text_long"] = 
 {
 	name = "text_long",
@@ -369,7 +464,7 @@ editor_objlist["text_long"] =
 	unittype = "text",
 	tags = {"text","abstract"},
 	tiling = -1,
-	type = 0,
+	type = 2,
 	layer = 20,
 	colour = {1,1},
 	colour_active = {1,3},
@@ -386,6 +481,45 @@ editor_objlist["my"] =
 	colour = {3,0},
 	colour_active = {3,1},
 }
+editor_objlist["text_twice"] = 
+{
+	name = "text_twice",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {1,1},
+	colour_active = {1,3},
+}
+editor_objlist["agrees"] = 
+{
+	name = "text_agrees",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 1,
+	layer = 20,
+	colour = {5,0},
+	colour_active = {5,2},
+}
+
+editor_objlist["text_forget"] = 
+{
+	name = "text_forget",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 1,
+	layer = 20,
+	colour = {2,1},
+	colour_active = {2,2},
+	argtype = {0,2},
+}
+
 
 editor_objlist["pointed"] = 
 {
@@ -423,7 +557,78 @@ editor_objlist["text_nocba"] =
 	colour = {0,1},
 	colour_active = {0,3},
 }
-
+editor_objlist["text_then"] = 
+{
+	name = "text_then",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
+editor_objlist["text_ifrule"] = 
+{
+	name = "text_ifrule",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
+editor_objlist["text_ifcond"] = 
+{
+	name = "text_ifcond",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
+editor_objlist["text_if"] = 
+{
+	name = "text_if",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 5,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
+editor_objlist["text_cond"] = 
+{
+	name = "text_cond",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 5,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
+editor_objlist["text_rule"] = 
+{
+	name = "text_rule",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 5,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
 editor_objlist["text_keked"] = 
 {
 	name = "text_keked",
@@ -432,6 +637,30 @@ editor_objlist["text_keked"] =
 	tags = {"text","abstract"},
 	tiling = -1,
 	type = 3,
+	layer = 20,
+	colour = {2,1},
+	colour_active = {2,2},
+}
+editor_objlist["text_expired"] = 
+{
+	name = "text_expired",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {2,1},
+	colour_active = {2,2},
+}
+editor_objlist["text_pause"] = 
+{
+	name = "text_pause",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 2,
 	layer = 20,
 	colour = {2,1},
 	colour_active = {2,2},
@@ -488,7 +717,18 @@ editor_objlist["text_press_space"] =
 	colour = {0,1},
 	colour_active = {0,3},
 }
-
+editor_objlist["text_press_undone"] = 
+{
+	name = "text_press_undone",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
 editor_objlist["text_press_d"] = 
 {
 	name = "text_press_d",
@@ -540,7 +780,18 @@ editor_objlist["text_press_w"] =
 	colour = {0,1},
 	colour_active = {0,3},
 }
-
+editor_objlist["text_undoing"] = 
+{
+	name = "text_undoing",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 3,
+	layer = 20,
+	colour = {0,1},
+	colour_active = {0,3},
+}
 editor_objlist["blossom"] =
 {
 	name = "blossom",
@@ -753,7 +1004,18 @@ editor_objlist["barrier"] =
 	layer = 14,
 	colour = {0,3},
 }
-
+editor_objlist["text_tags"] = 
+{
+    name = "text_tags",
+    sprite_in_root = false,
+    unittype = "text",
+    tags = {"text","abstract", "tag objects"},
+    tiling = -1,
+    type = 0,
+    layer = 20,
+    colour = {3,0},
+    colour_active = {3,1},
+}
 editor_objlist["text_barrier"] = 
 {
 	name = "text_barrier",
@@ -766,7 +1028,30 @@ editor_objlist["text_barrier"] =
 	colour = {0,1},
 	colour_active = {0,3},
 }
+editor_objlist["alty"] = 
+{
+	name = "alty",
+	sprite_in_root = false,
+	unittype = "object",
+	tags = {"abstract"},
+	tiling = 2,
+	type = 0,
+	layer = 20,
+	colour = {5,2},
+}
 
+editor_objlist["text_alty"] = 
+{
+	name = "text_alty",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 20,
+	colour = {5,0},
+	colour_active = {5,2},
+}
 editor_objlist["stisti"] = 
 {
 	name = "stisti",
@@ -942,7 +1227,42 @@ editor_objlist["text_everything"] =
 	colour = {2,1},
 	colour_active = {0,3},
 }
-
+editor_objlist["text_variable1"] = 
+{
+	name = "text_variable1",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 20,
+	colour = {4,3},
+	colour_active = {1,3},
+}
+editor_objlist["text_variable2"] = 
+{
+	name = "text_variable2",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 20,
+	colour = {2,1},
+	colour_active = {2,2},
+}
+editor_objlist["text_variable3"] = 
+{
+	name = "text_variable3",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 20,
+	colour = {5,1},
+	colour_active = {5,4},
+}
 editor_objlist["text_something"] = 
 {
 	name = "text_something",
@@ -1152,6 +1472,30 @@ editor_objlist["text_frozenbarrier"] =
 	colour = {0,1},
 	colour_active = {0,3},
 }
+editor_objlist["leg0"] = 
+{
+	name = "lego",
+	sprite_in_root = false,
+	unittype = "object",
+	tags = {"abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 14,
+	colour = {6,1},
+}
+
+editor_objlist["text_lego"] = 
+{
+	name = "text_lego",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 20,
+	colour = {6,3},
+	colour_active = {6,1},
+}
 
 editor_objlist["log"] = 
 {
@@ -1252,6 +1596,32 @@ editor_objlist["keith"] =
 	layer = 20,
 	colour = {0,3},
 }
+
+editor_objlist["text_pigeon"] = 
+{
+	name = "text_pigeon",
+	sprite_in_root = false,
+	unittype = "text",
+	tags = {"text","abstract"},
+	tiling = -1,
+	type = 0,
+	layer = 20,
+	colour = {0,2},
+	colour_active = {0,4},
+}
+
+editor_objlist["pigeon"] = 
+{
+	name = "pigeon",
+	sprite_in_root = false,
+	unittype = "object",
+	tags = {"abstract"},
+	tiling = 0,
+	type = 0,
+	layer = 20,
+	colour = {0,3},
+}
+
 editor_objlist["text_nothing"] = 
 {
 	name = "text_nothing",
